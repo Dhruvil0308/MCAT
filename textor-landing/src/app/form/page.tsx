@@ -303,10 +303,30 @@ export default function FormPage() {
     }
   };
 
-  const handleSubmit = () => {
-    console.log("Form submitted:", formData);
-    // Handle form submission here
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("https://mcat.onrender.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to submit form");
+      }
+  
+      const result = await response.json();
+      console.log("Form submitted successfully:", result);
+      alert("Your information has been submitted!");
+      // You can redirect or reset formData if needed
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert("Something went wrong while submitting. Please try again.");
+    }
   };
+  
 
   const isLastStep = currentStepIndex === visibleSteps.length - 1;
   const canProceed = formData[currentStep.id as keyof FormData] && 
